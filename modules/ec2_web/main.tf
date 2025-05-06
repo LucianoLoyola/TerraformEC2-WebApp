@@ -6,10 +6,12 @@ data "aws_vpc" "default" {
   default = true
 }
 #Subnets de la default VPC
-data "aws_subnet_ids" "default" {
-  vpc_id = data.aws_vpc.default.id
+data "aws_subnets" "default" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.default.id]
+  }
 }
-
 #Latest Amazon Linux 2 AMI
 data "aws_ami" "amazon_linux" {
   most_recent = true
@@ -43,10 +45,9 @@ resource "aws_security_group" "web_sg" {
 resource "aws_instance" "web_server" {
   ami                         = data.aws_ami.amazon_linux.id
   instance_type               = var.instance_type
-  subnet_id                   = data.aws_subnet_ids.default.ids[0]#Primer subnet de la lista
-  vpc_security_group_ids      = [aws_security_group.web_sg.id]#SG Custom
-  associate_public_ip_address = var.associate_public_ip#Auto asignar IP pública
-  #Script para instanar NGINX
+  subnet_id                   = data.aws_subnets.default.ids[0]
+  vpc_security_group_ids      = [aws_security_group.web_sg.id]
+  associate_public_ip_address = var.associate_public_ip
   user_data = var.user_data_content != "" ? var.user_data_content : <<-EOF
               #!/bin/bash
               sudo amazon-linux-extras enable nginx1
