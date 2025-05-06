@@ -6,7 +6,7 @@ variable "region" {
 #EC2
 variable "instance_type"    {
     type = string
-    default= "t2.micro"
+    default= "t3.micro"
 }
 
 variable "user_data_content" {
