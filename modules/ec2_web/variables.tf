@@ -28,3 +28,4 @@ variable "associate_public_ip" {
   default     = true
   description = "Auto assign IP pública a la instancia"
 }
+
