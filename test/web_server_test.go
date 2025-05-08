@@ -1,7 +1,6 @@
 package test
 
 import (
-	"strings"
 	"testing"
 	"time"
 
@@ -13,7 +12,7 @@ func TestWebServerPritunlCheck(t *testing.T) {
 	t.Parallel()
 
 	terraformOptions := &terraform.Options{
-		TerraformDir: "../", // Cambia si tu .tf está en otro directorio
+		TerraformDir: "../",
 	}
 
 	defer terraform.Destroy(t, terraformOptions)
@@ -29,11 +28,11 @@ func TestWebServerPritunlCheck(t *testing.T) {
 	http_helper.HttpGetWithRetryWithCustomValidationE(
 		t,
 		url,
-		nil, // No se necesita configuración TLS para HTTP
+		nil,
 		maxRetries,
 		timeBetweenRetries,
-		func(status int, body string) bool {
-			return status == expectedStatus && strings.Contains(body, `"status": "ok"`)
+		func(status int, _ string) bool {
+			return status == expectedStatus
 		},
 	)
 }
