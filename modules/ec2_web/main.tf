@@ -32,31 +32,7 @@ data "aws_subnet" "preferred" {
   }
 }
 
-# Latest Oracle Linux 9 AMI
-data "aws_ami" "oracle_linux" {
-  most_recent = true
-  filter {
-    name   = "name"
-    values = ["OL9*-x86_64-HVM-*"]
-  }
-
-  filter {
-    name   = "architecture"
-    values = ["x86_64"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  filter {
-    name   = "root-device-type"
-    values = ["ebs"]
-  }
-
-  owners = ["131827586825"]
-}
+# Latest Ubuntu 24.04 AMI
 
 # Security Group para tráfico HTTP, HTTPS y SSH
 resource "aws_security_group" "web_sg" {
@@ -115,7 +91,7 @@ resource "local_file" "private_key" {
 
 # EC2 Instance
 resource "aws_instance" "web_server" {
-  ami                         = "ami-00b5c37e7194270f7"
+  ami                         = "ami-05c17b22914ce7378"
   instance_type               = var.instance_type
   availability_zone           = local.preferred_az
   subnet_id                   = data.aws_subnet.preferred.id
